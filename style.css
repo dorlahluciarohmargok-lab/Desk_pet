@@ -1,0 +1,685 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: #1a1a2e;
+    font-family: 'Microsoft YaHei', sans-serif;
+    cursor: default;
+    user-select: none;
+}
+
+/* 桌面背景 */
+.desktop-bg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* 任务栏 */
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: rgba(30, 30, 50, 0.95);
+    border-top: 1px solid rgba(100, 100, 200, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.taskbar-left .start-btn {
+    color: #fff;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.1);
+}
+
+.taskbar-right {
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* ======== 祖国人宠物 ======== */
+.pet-container {
+    position: fixed;
+    width: 120px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    z-index: 500;
+    transition: filter 0.3s;
+}
+
+.pet-container:active {
+    cursor: grabbing;
+}
+
+.pet-container:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+}
+
+/* 头部 */
+.head {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.hair {
+    position: absolute;
+    width: 52px;
+    height: 25px;
+    background: #f5d442;
+    border-radius: 26px 26px 0 0;
+    top: -5px;
+    left: -1px;
+    z-index: 11;
+}
+
+.hair::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background: #f5d442;
+    border-radius: 4px;
+    top: 10px;
+    right: -2px;
+    transform: rotate(15deg);
+}
+
+.face {
+    position: absolute;
+    width: 46px;
+    height: 40px;
+    background: #fdd9b5;
+    border-radius: 23px 23px 20px 20px;
+    top: 10px;
+    left: 2px;
+}
+
+.eye {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    top: 12px;
+    border: 1px solid #333;
+}
+
+.left-eye {
+    left: 10px;
+}
+
+.right-eye {
+    right: 10px;
+}
+
+.pupil {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #2196F3;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s;
+}
+
+.mouth {
+    position: absolute;
+    width: 12px;
+    height: 6px;
+    border-bottom: 2px solid #c0392b;
+    border-radius: 0 0 6px 6px;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 躯干 */
+.torso {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(180deg, #1a47a0, #1a3a8a);
+    top: 52px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 8px 8px 5px 5px;
+    z-index: 5;
+}
+
+.emblem {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, #f5d442, #e8a700);
+    border-radius: 50%;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #c0392b;
+    box-shadow: 0 0 8px rgba(245, 212, 66, 0.5);
+}
+
+.eagle {
+    color: #c0392b;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.belt {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: #f5d442;
+    bottom: 5px;
+    border-radius: 2px;
+}
+
+/* 手臂 */
+.arm {
+    position: absolute;
+    width: 16px;
+    height: 40px;
+    background: linear-gradient(180deg, #1a47a0, #1a3a8a);
+    top: 55px;
+    border-radius: 8px;
+    z-index: 4;
+    transition: transform 0.3s ease;
+}
+
+.left-arm {
+    left: 12px;
+    transform: rotate(5deg);
+}
+
+.right-arm {
+    right: 12px;
+    transform: rotate(-5deg);
+}
+
+/* 腿 */
+.leg {
+    position: absolute;
+    width: 18px;
+    height: 30px;
+    background: linear-gradient(180deg, #1a3a8a, #15307a);
+    top: 100px;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+.left-leg {
+    left: 38px;
+}
+
+.right-leg {
+    right: 38px;
+}
+
+/* 靴子 */
+.boot {
+    position: absolute;
+    width: 20px;
+    height: 14px;
+    background: #c0392b;
+    top: 128px;
+    border-radius: 4px 4px 6px 6px;
+    z-index: 3;
+}
+
+.left-boot {
+    left: 37px;
+}
+
+.right-boot {
+    right: 37px;
+}
+
+/* 披风 */
+.cape {
+    position: absolute;
+    width: 70px;
+    height: 80px;
+    background: linear-gradient(180deg, #c0392b, #922b21);
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px 5px 35px 35px;
+    z-index: 1;
+    transition: all 0.3s;
+    animation: cape-idle 3s ease-in-out infinite;
+}
+
+.cape-inner {
+    position: absolute;
+    width: 55px;
+    height: 70px;
+    background: linear-gradient(180deg, #e74c3c, #c0392b);
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px 5px 28px 28px;
+    z-index: 0;
+    animation: cape-idle 3s ease-in-out infinite 0.2s;
+}
+
+@keyframes cape-idle {
+    0%, 100% { transform: translateX(-50%) scaleX(1); }
+    50% { transform: translateX(-50%) scaleX(1.05); }
+}
+
+/* ======== 飞行状态 ======== */
+.pet-container.flying .cape {
+    animation: cape-fly 0.4s ease-in-out infinite alternate;
+    height: 100px;
+}
+
+.pet-container.flying .cape-inner {
+    animation: cape-fly-inner 0.4s ease-in-out infinite alternate 0.1s;
+    height: 90px;
+}
+
+.pet-container.flying .left-arm {
+    transform: rotate(-30deg) translateY(-5px);
+}
+
+.pet-container.flying .right-arm {
+    transform: rotate(30deg) translateY(-5px);
+}
+
+.pet-container.flying .left-leg {
+    transform: rotate(10deg);
+}
+
+.pet-container.flying .right-leg {
+    transform: rotate(-10deg);
+}
+
+@keyframes cape-fly {
+    0% { transform: translateX(-50%) scaleX(0.9) rotate(-3deg); }
+    100% { transform: translateX(-50%) scaleX(1.15) rotate(3deg); }
+}
+
+@keyframes cape-fly-inner {
+    0% { transform: translateX(-50%) scaleX(0.85) rotate(3deg); }
+    100% { transform: translateX(-50%) scaleX(1.1) rotate(-3deg); }
+}
+
+/* 飞行粒子 */
+.flight-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.pet-container.flying .flight-particles {
+    opacity: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #f5d442;
+    border-radius: 50%;
+    bottom: 10px;
+    opacity: 0;
+    box-shadow: 0 0 6px rgba(245, 212, 66, 0.8);
+}
+
+.pet-container.flying .particle {
+    animation: particle-fly 0.8s ease-out infinite;
+}
+
+.p1 { left: 30%; animation-delay: 0s !important; }
+.p2 { left: 50%; animation-delay: 0.15s !important; }
+.p3 { left: 70%; animation-delay: 0.3s !important; }
+.p4 { left: 20%; animation-delay: 0.45s !important; }
+.p5 { left: 60%; animation-delay: 0.6s !important; }
+.p6 { left: 80%; animation-delay: 0.75s !important; }
+
+@keyframes particle-fly {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.3);
+    }
+}
+
+/* 飞行轨迹 */
+.flight-trail {
+    position: absolute;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(to bottom, rgba(245, 212, 66, 0.8), transparent);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.pet-container.flying .flight-trail {
+    height: 40px;
+    opacity: 1;
+    animation: trail-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes trail-pulse {
+    0% { height: 30px; opacity: 0.6; }
+    100% { height: 50px; opacity: 1; }
+}
+
+/* ======== 镭射眼 ======== */
+.laser {
+    position: absolute;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(to bottom, #ff0000, #ff4444, #ff0000);
+    top: 27px;
+    opacity: 0;
+    z-index: 100;
+    border-radius: 2px;
+    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff4444, 0 0 40px #ff0000;
+    transition: none;
+}
+
+.left-laser {
+    left: 45px;
+}
+
+.right-laser {
+    left: 65px;
+}
+
+.pet-container.laser-active .laser {
+    opacity: 1;
+    height: 800px;
+    animation: laser-beam 0.1s ease-in-out infinite alternate;
+}
+
+.pet-container.laser-active .eye {
+    background: #ff0000 !important;
+    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff4444;
+    animation: eye-glow 0.15s ease-in-out infinite alternate;
+}
+
+.pet-container.laser-active .pupil {
+    background: #fff !important;
+    box-shadow: 0 0 5px #fff;
+}
+
+@keyframes laser-beam {
+    0% { width: 3px; box-shadow: 0 0 8px #ff0000, 0 0 15px #ff4444; }
+    100% { width: 5px; box-shadow: 0 0 15px #ff0000, 0 0 30px #ff4444, 0 0 50px #ff0000; }
+}
+
+@keyframes eye-glow {
+    0% { box-shadow: 0 0 8px #ff0000, 0 0 15px #ff4444; }
+    100% { box-shadow: 0 0 15px #ff0000, 0 0 30px #ff4444, 0 0 50px #ff0000; }
+}
+
+/* 镭射爆炸效果 */
+.laser-explosion {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff, #ff4444, transparent);
+    pointer-events: none;
+    z-index: 1001;
+    animation: explode 0.5s ease-out forwards;
+}
+
+.laser-explosion.hidden {
+    display: none;
+}
+
+@keyframes explode {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* ======== 语录气泡 ======== */
+.speech-bubble {
+    position: fixed;
+    max-width: 250px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 600;
+    animation: bubble-in 0.3s ease-out;
+    pointer-events: none;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(255, 255, 255, 0.95);
+}
+
+.speech-bubble p {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: bold;
+    text-align: center;
+}
+
+.speech-bubble.hidden {
+    display: none;
+}
+
+@keyframes bubble-in {
+    0% { transform: scale(0) translateY(10px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* ======== 闲置动画 ======== */
+.pet-container.idle {
+    animation: float-idle 3s ease-in-out infinite;
+}
+
+@keyframes float-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* 着陆动画 */
+.pet-container.landing {
+    animation: land 0.5s ease-out;
+}
+
+@keyframes land {
+    0% { transform: scale(1.1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* 屏幕震动 - 镭射眼触发时 */
+body.shake {
+    animation: screen-shake 0.3s ease-in-out;
+}
+
+@keyframes screen-shake {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-3px, 2px); }
+    40% { transform: translate(3px, -2px); }
+    60% { transform: translate(-2px, 3px); }
+    80% { transform: translate(2px, -3px); }
+}
+
+/* 速度线效果 */
+.speed-line {
+    position: fixed;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(255, 215, 0, 0.8), transparent);
+    pointer-events: none;
+    z-index: 50;
+    animation: speed-fade 0.5s ease-out forwards;
+}
+
+@keyframes speed-fade {
+    0% { opacity: 1; transform: scaleY(1); }
+    100% { opacity: 0; transform: scaleY(2); }
+}
+
+/* ======== 悬停任务提示 ======== */
+.task-tooltip {
+    position: fixed;
+    max-width: 280px;
+    min-width: 180px;
+    padding: 14px 18px;
+    background: rgba(20, 20, 40, 0.95);
+    border: 1px solid rgba(245, 212, 66, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 212, 66, 0.15);
+    z-index: 700;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.task-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.task-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(20, 20, 40, 0.95);
+}
+
+.task-tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(245, 212, 66, 0.2);
+}
+
+.task-tooltip-header .status-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4caf50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+    animation: status-pulse 2s ease-in-out infinite;
+}
+
+.task-tooltip-header .status-icon.busy {
+    background: #ff9800;
+    box-shadow: 0 0 6px rgba(255, 152, 0, 0.6);
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.task-tooltip-header .title {
+    color: #f5d442;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.task-tooltip .task-content {
+    color: #e0e0e0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.task-tooltip .task-content .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.task-tooltip .task-content .task-item:last-child {
+    margin-bottom: 0;
+}
+
+.task-tooltip .task-content .task-icon {
+    flex-shrink: 0;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.task-tooltip .task-content .task-text {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.task-tooltip .task-content .task-text.active {
+    color: #fff;
+    font-weight: bold;
+}
+
+.task-tooltip .task-time {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #888;
+    font-size: 11px;
+    text-align: right;
+}
