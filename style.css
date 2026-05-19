@@ -570,3 +570,116 @@ body.shake {
     0% { opacity: 1; transform: scaleY(1); }
     100% { opacity: 0; transform: scaleY(2); }
 }
+
+/* ======== 悬停任务提示 ======== */
+.task-tooltip {
+    position: fixed;
+    max-width: 280px;
+    min-width: 180px;
+    padding: 14px 18px;
+    background: rgba(20, 20, 40, 0.95);
+    border: 1px solid rgba(245, 212, 66, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 212, 66, 0.15);
+    z-index: 700;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.task-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.task-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(20, 20, 40, 0.95);
+}
+
+.task-tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(245, 212, 66, 0.2);
+}
+
+.task-tooltip-header .status-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4caf50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+    animation: status-pulse 2s ease-in-out infinite;
+}
+
+.task-tooltip-header .status-icon.busy {
+    background: #ff9800;
+    box-shadow: 0 0 6px rgba(255, 152, 0, 0.6);
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.task-tooltip-header .title {
+    color: #f5d442;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.task-tooltip .task-content {
+    color: #e0e0e0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.task-tooltip .task-content .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.task-tooltip .task-content .task-item:last-child {
+    margin-bottom: 0;
+}
+
+.task-tooltip .task-content .task-icon {
+    flex-shrink: 0;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.task-tooltip .task-content .task-text {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.task-tooltip .task-content .task-text.active {
+    color: #fff;
+    font-weight: bold;
+}
+
+.task-tooltip .task-time {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #888;
+    font-size: 11px;
+    text-align: right;
+}

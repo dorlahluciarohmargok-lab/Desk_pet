@@ -379,6 +379,131 @@ window.addEventListener('resize', () => {
     pet.style.top = petY + 'px';
 });
 
+// ======== 悬停任务提醒 ========
+const taskTooltip = document.getElementById('task-tooltip');
+const taskContent = document.getElementById('task-content');
+const taskTime = document.getElementById('task-time');
+
+// 任务列表 - 模拟祖国人正在执行的任务
+const tasks = [
+    { icon: '🛡️', text: '巡视沃特国际总部', active: true },
+    { icon: '📺', text: '准备电视采访', active: false },
+    { icon: '🥛', text: '喝牛奶补充能量', active: false },
+    { icon: '👀', text: '监视黑袍纠察队', active: false },
+    { icon: '💪', text: '维护英雄形象', active: false },
+];
+
+// 随机任务组合
+const taskSets = [
+    [
+        { icon: '🛡️', text: '巡视沃特国际总部', active: true },
+        { icon: '📺', text: '准备电视采访', active: false },
+        { icon: '🥛', text: '喝牛奶', active: false },
+    ],
+    [
+        { icon: '👁️', text: '用透视眼搜索目标', active: true },
+        { icon: '🦸', text: '拍摄宣传照', active: false },
+        { icon: '💀', text: '处理叛徒', active: false },
+    ],
+    [
+        { icon: '🌍', text: '拯救世界（表面上）', active: true },
+        { icon: '📱', text: '查看社交媒体评论', active: false },
+        { icon: '😤', text: '对星光发火', active: false },
+    ],
+    [
+        { icon: '✈️', text: '高空飞行巡逻', active: true },
+        { icon: '🎬', text: '拍摄英雄纪录片', active: false },
+        { icon: '🏢', text: '开沃特董事会', active: false },
+    ],
+    [
+        { icon: '🔥', text: '练习镭射眼精准度', active: true },
+        { icon: '🥛', text: '喝牛奶补充能量', active: false },
+        { icon: '👔', text: '检查战衣状态', active: false },
+    ],
+    [
+        { icon: '📡', text: '监听全城通讯', active: true },
+        { icon: '💪', text: '维护公众英雄形象', active: false },
+        { icon: '😈', text: '密谋下一步计划', active: false },
+    ],
+];
+
+let hoverTimer = null;
+let isHovering = false;
+
+pet.addEventListener('mouseenter', handleMouseEnter);
+pet.addEventListener('mouseleave', handleMouseLeave);
+
+function handleMouseEnter() {
+    if (isDragging || isLasering) return;
+    
+    // 延迟显示，避免快速经过时闪烁
+    hoverTimer = setTimeout(() => {
+        isHovering = true;
+        showTaskTooltip();
+    }, 400);
+}
+
+function handleMouseLeave() {
+    if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+    }
+    isHovering = false;
+    taskTooltip.classList.remove('visible');
+}
+
+function showTaskTooltip() {
+    // 随机选择一组任务
+    const currentTasks = taskSets[Math.floor(Math.random() * taskSets.length)];
+    
+    // 构建任务内容
+    let html = '';
+    currentTasks.forEach(task => {
+        const activeClass = task.active ? 'active' : '';
+        const checkIcon = task.active ? '▶' : '○';
+        html += `<div class="task-item">
+            <span class="task-icon">${task.active ? task.icon : checkIcon}</span>
+            <span class="task-text ${activeClass}">${task.text}</span>
+        </div>`;
+    });
+    taskContent.innerHTML = html;
+    
+    // 更新时间
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    taskTime.textContent = `🕐 当前时间 ${h}:${m}`;
+    
+    // 更新状态灯
+    const statusIcon = taskTooltip.querySelector('.status-icon');
+    statusIcon.className = 'status-icon' + (currentTasks[0].active ? ' busy' : '');
+    
+    // 定位在宠物上方
+    const tooltipX = petX + 60 - 140;
+    const tooltipY = petY - 130;
+    
+    taskTooltip.style.left = Math.max(10, Math.min(tooltipX, window.innerWidth - 290)) + 'px';
+    taskTooltip.style.top = Math.max(10, tooltipY < 10 ? petY + 170 : tooltipY) + 'px';
+    
+    taskTooltip.classList.add('visible');
+}
+
+// 拖动时隐藏tooltip
+const originalStartDrag = startDrag;
+pet.removeEventListener('mousedown', startDrag);
+pet.addEventListener('mousedown', function(e) {
+    // 隐藏tooltip
+    if (isHovering) {
+        isHovering = false;
+        taskTooltip.classList.remove('visible');
+        if (hoverTimer) {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+        }
+    }
+    originalStartDrag(e);
+});
+
 // ======== 初始欢迎 ========
 setTimeout(() => {
     showQuote();
