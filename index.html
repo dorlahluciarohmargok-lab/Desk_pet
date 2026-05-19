@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>祖国人桌面宠物 - Homelander Desktop Pet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="desktop-bg">
+        <div class="taskbar">
+            <div class="taskbar-left">
+                <span class="start-btn">🖥️ 桌面宠物</span>
+            </div>
+            <div class="taskbar-right">
+                <span id="clock"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 祖国人桌面宠物 -->
+    <div id="pet-container" class="pet-container">
+        <!-- 披风 -->
+        <div class="cape"></div>
+        <div class="cape-inner"></div>
+        
+        <!-- 身体 -->
+        <div class="body">
+            <!-- 头部 -->
+            <div class="head">
+                <div class="hair"></div>
+                <div class="face">
+                    <div class="eye left-eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="eye right-eye">
+                        <div class="pupil"></div>
+                    </div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+            
+            <!-- 躯干 -->
+            <div class="torso">
+                <div class="emblem">
+                    <div class="eagle">★</div>
+                </div>
+                <div class="belt"></div>
+            </div>
+            
+            <!-- 手臂 -->
+            <div class="arm left-arm"></div>
+            <div class="arm right-arm"></div>
+            
+            <!-- 腿 -->
+            <div class="leg left-leg"></div>
+            <div class="leg right-leg"></div>
+            
+            <!-- 靴子 -->
+            <div class="boot left-boot"></div>
+            <div class="boot right-boot"></div>
+        </div>
+
+        <!-- 镭射眼效果 -->
+        <div class="laser left-laser"></div>
+        <div class="laser right-laser"></div>
+        
+        <!-- 飞行特效 -->
+        <div class="flight-particles">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="particle p6"></div>
+        </div>
+
+        <!-- 飞行轨迹 -->
+        <div class="flight-trail"></div>
+    </div>
+
+    <!-- 语录气泡 -->
+    <div id="speech-bubble" class="speech-bubble hidden">
+        <p id="quote-text"></p>
+    </div>
+
+    <!-- 镭射爆炸效果 -->
+    <div id="laser-explosion" class="laser-explosion hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
