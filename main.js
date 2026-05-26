@@ -44,6 +44,12 @@ function createWindow() {
         const { width, height } = screen.getPrimaryDisplay().workAreaSize;
         event.returnValue = { width, height };
     });
+
+    ipcMain.on('set-opacity', (event, opacity) => {
+        if (mainWindow) {
+            mainWindow.setOpacity(opacity);
+        }
+    });
 }
 
 app.whenReady().then(createWindow);

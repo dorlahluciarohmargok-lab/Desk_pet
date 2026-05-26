@@ -85,6 +85,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
 .task-text{font-size:11px;color:#ccc;}
 .task-text.active{color:#fff;font-weight:bold;}
 .task-time{margin-top:6px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.1);color:#888;font-size:10px;text-align:right;}
+
+/* 护盾效果 I键 */
+.shield{position:absolute;width:130px;height:170px;top:-5px;left:50%;transform:translateX(-50%);border-radius:50%;border:3px solid #f5d442;box-shadow:0 0 15px rgba(245,212,66,0.6),inset 0 0 15px rgba(245,212,66,0.2);opacity:0;pointer-events:none;z-index:200;}
+.shield.active{opacity:1;animation:shield-flash 0.3s ease-in-out 3 alternate;}
+@keyframes shield-flash{0%{opacity:0.4;box-shadow:0 0 10px rgba(245,212,66,0.3);}100%{opacity:1;box-shadow:0 0 25px rgba(245,212,66,0.8),inset 0 0 20px rgba(245,212,66,0.3);}}
+
+/* 声波效果 H键 */
+.soundwave{position:absolute;width:140px;height:30px;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:2px;opacity:0;pointer-events:none;z-index:200;}
+.soundwave.active{opacity:1;}
+.soundwave .bar{width:3px;background:#4fc3f7;border-radius:2px;animation:wave 0.5s ease-in-out infinite alternate;}
+.soundwave .bar:nth-child(1){height:8px;animation-delay:0s;}
+.soundwave .bar:nth-child(2){height:16px;animation-delay:0.1s;}
+.soundwave .bar:nth-child(3){height:24px;animation-delay:0.2s;}
+.soundwave .bar:nth-child(4){height:18px;animation-delay:0.3s;}
+.soundwave .bar:nth-child(5){height:12px;animation-delay:0.15s;}
+.soundwave .bar:nth-child(6){height:20px;animation-delay:0.25s;}
+.soundwave .bar:nth-child(7){height:10px;animation-delay:0.35s;}
+@keyframes wave{0%{transform:scaleY(0.5);}100%{transform:scaleY(1.5);}}
 </style>
 </head>
 <body>
@@ -108,6 +126,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
     </div>
     <!-- 语录气泡 -->
     <div id="speech-bubble" class="speech-bubble hidden"><p id="quote-text"></p></div>
+    <!-- 护盾 -->
+    <div id="shield" class="shield"></div>
+    <!-- 声波 -->
+    <div id="soundwave" class="soundwave">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
     <!-- 任务提示 -->
     <div id="task-tooltip" class="task-tooltip">
         <div class="task-tooltip-header"><div class="status-icon"></div><span class="title">&#9889; 任务面板</span></div>
@@ -242,6 +267,135 @@ function hideTooltip() {
 
 // 欢迎
 setTimeout(showQuote, 1500);
+
+// ======== 键盘技能 ========
+document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    switch(key) {
+        case 't': skillHeatVision(); break;
+        case 'f': skillFly(); break;
+        case 'p': skillSuperStrength(); break;
+        case 'd': skillSuperSpeed(); break;
+        case 'x': skillXRay(); break;
+        case 'h': skillSuperHearing(); break;
+        case 'i': skillInvulnerability(); break;
+        case 'c': skillSocialInfluence(); break;
+    }
+});
+
+// T - 热视线（镭射眼 + 窗口抖动）
+function skillHeatVision() {
+    if (isLasering) return;
+    isLasering = true;
+    pet.classList.remove('idle');
+    pet.classList.add('laser-active');
+    // 窗口抖动
+    let shakeCount = 0;
+    const shakeInterval = setInterval(function() {
+        const pos = ipcRenderer.sendSync('get-position');
+        const ox = (Math.random() - 0.5) * 6;
+        const oy = (Math.random() - 0.5) * 6;
+        ipcRenderer.send('move-window', { x: pos.x + ox, y: pos.y + oy });
+        shakeCount++;
+        if (shakeCount > 10) clearInterval(shakeInterval);
+    }, 30);
+    setTimeout(function() {
+        pet.classList.remove('laser-active');
+        pet.classList.add('idle');
+        isLasering = false;
+    }, 1500);
+}
+
+// F - 飞行（窗口向上飘50px再落回）
+function skillFly() {
+    pet.classList.remove('idle');
+    pet.classList.add('flying');
+    const pos = ipcRenderer.sendSync('get-position');
+    const origY = pos.y;
+    let step = 0;
+    const upInterval = setInterval(function() {
+        step += 5;
+        ipcRenderer.send('move-window', { x: pos.x, y: origY - step });
+        if (step >= 50) {
+            clearInterval(upInterval);
+            setTimeout(function() {
+                let downStep = 50;
+                const downInterval = setInterval(function() {
+                    downStep -= 5;
+                    ipcRenderer.send('move-window', { x: pos.x, y: origY - downStep });
+                    if (downStep <= 0) {
+                        clearInterval(downInterval);
+                        pet.classList.remove('flying');
+                        pet.classList.add('idle');
+                    }
+                }, 30);
+            }, 300);
+        }
+    }, 30);
+}
+
+// P - 超级力量（窗口剧烈左右晃动）
+function skillSuperStrength() {
+    const pos = ipcRenderer.sendSync('get-position');
+    let count = 0;
+    const shakeInterval = setInterval(function() {
+        const offset = (count % 2 === 0) ? 10 : -10;
+        ipcRenderer.send('move-window', { x: pos.x + offset, y: pos.y });
+        count++;
+        if (count >= 8) {
+            clearInterval(shakeInterval);
+            ipcRenderer.send('move-window', { x: pos.x, y: pos.y });
+        }
+    }, 25);
+}
+
+// D - 超级速度（窗口闪现一段距离）
+function skillSuperSpeed() {
+    const pos = ipcRenderer.sendSync('get-position');
+    const screenSize = ipcRenderer.sendSync('get-screen-size');
+    const dx = (Math.random() - 0.5) * 200;
+    const dy = (Math.random() - 0.5) * 200;
+    let newX = Math.max(0, Math.min(pos.x + dx, screenSize.width - 200));
+    let newY = Math.max(0, Math.min(pos.y + dy, screenSize.height - 250));
+    ipcRenderer.send('move-window', { x: newX, y: newY });
+}
+
+// X - 透视眼（窗口半透明0.8秒）
+function skillXRay() {
+    ipcRenderer.send('set-opacity', 0.5);
+    setTimeout(function() {
+        ipcRenderer.send('set-opacity', 1.0);
+    }, 800);
+}
+
+// H - 超级听力（显示声波动画）
+function skillSuperHearing() {
+    const sw = document.getElementById('soundwave');
+    quoteEl.textContent = '正在监听心跳...';
+    bubble.classList.remove('hidden');
+    sw.classList.add('active');
+    setTimeout(function() {
+        sw.classList.remove('active');
+        bubble.classList.add('hidden');
+    }, 2000);
+}
+
+// I - 超强防御（金色护盾）
+function skillInvulnerability() {
+    const shield = document.getElementById('shield');
+    shield.classList.add('active');
+    setTimeout(function() {
+        shield.classList.remove('active');
+    }, 1500);
+}
+
+// C - 社会影响力（对话气泡）
+function skillSocialInfluence() {
+    const phrases = ["You are nothing.", "Bow to me.", "I'm the Homelander.", "鼓掌！现在就鼓掌！"];
+    quoteEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    bubble.classList.remove('hidden');
+    setTimeout(function() { bubble.classList.add('hidden'); }, 3000);
+}
 </script>
 </body>
 </html>
