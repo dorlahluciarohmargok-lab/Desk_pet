@@ -6,8 +6,11 @@
 <title>祖国人桌面宠物</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
-.pet-container{position:absolute;width:120px;height:160px;cursor:grab;left:50%;top:50%;transform:translate(-50%,-50%);transition:filter 0.3s;-webkit-app-region:no-drag;}
+body{overflow:hidden;width:100vw;height:100vh;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);font-family:'Microsoft YaHei',sans-serif;cursor:default;user-select:none;}
+.taskbar{position:fixed;bottom:0;left:0;width:100%;height:40px;background:rgba(30,30,50,0.95);border-top:1px solid rgba(100,100,200,0.3);display:flex;align-items:center;justify-content:space-between;padding:0 15px;z-index:1000;backdrop-filter:blur(10px);}
+.taskbar .start-btn{color:#fff;font-size:14px;padding:4px 12px;border-radius:4px;background:rgba(255,255,255,0.1);}
+.taskbar .clock{color:#aaa;font-size:13px;}
+.pet-container{position:fixed;width:120px;height:160px;cursor:grab;z-index:500;transition:filter 0.3s;}
 .pet-container:active{cursor:grabbing;}
 .pet-container:hover{filter:drop-shadow(0 0 15px rgba(255,215,0,0.6));}
 .head{position:absolute;width:50px;height:50px;top:5px;left:50%;transform:translateX(-50%);z-index:10;}
@@ -31,8 +34,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
 .cape{position:absolute;width:70px;height:80px;background:linear-gradient(180deg,#c0392b,#922b21);top:45px;left:50%;transform:translateX(-50%);border-radius:5px 5px 35px 35px;z-index:1;animation:cape-idle 3s ease-in-out infinite;}
 .cape-inner{position:absolute;width:55px;height:70px;background:linear-gradient(180deg,#e74c3c,#c0392b);top:50px;left:50%;transform:translateX(-50%);border-radius:5px 5px 28px 28px;z-index:0;animation:cape-idle 3s ease-in-out infinite 0.2s;}
 @keyframes cape-idle{0%,100%{transform:translateX(-50%) scaleX(1);}50%{transform:translateX(-50%) scaleX(1.05);}}
-
-/* 飞行状态 */
 .pet-container.flying .cape{animation:cape-fly 0.4s ease-in-out infinite alternate;height:100px;}
 .pet-container.flying .cape-inner{animation:cape-fly-inner 0.4s ease-in-out infinite alternate 0.1s;height:90px;}
 .pet-container.flying .left-arm{transform:rotate(-30deg) translateY(-5px);}
@@ -41,8 +42,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
 .pet-container.flying .right-leg{transform:rotate(-10deg);}
 @keyframes cape-fly{0%{transform:translateX(-50%) scaleX(0.9) rotate(-3deg);}100%{transform:translateX(-50%) scaleX(1.15) rotate(3deg);}}
 @keyframes cape-fly-inner{0%{transform:translateX(-50%) scaleX(0.85) rotate(3deg);}100%{transform:translateX(-50%) scaleX(1.1) rotate(-3deg);}}
-
-/* 飞行粒子 */
 .flight-particles{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 0.3s;}
 .pet-container.flying .flight-particles{opacity:1;}
 .particle{position:absolute;width:6px;height:6px;background:#f5d442;border-radius:50%;bottom:10px;opacity:0;box-shadow:0 0 6px rgba(245,212,66,0.8);}
@@ -50,63 +49,54 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
 .p1{left:30%;animation-delay:0s!important;}.p2{left:50%;animation-delay:0.15s!important;}.p3{left:70%;animation-delay:0.3s!important;}
 .p4{left:20%;animation-delay:0.45s!important;}.p5{left:60%;animation-delay:0.6s!important;}.p6{left:80%;animation-delay:0.75s!important;}
 @keyframes particle-fly{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(60px) scale(0.3);}}
-
-/* 镭射眼 */
+.flight-trail{position:absolute;width:4px;height:0;background:linear-gradient(to bottom,rgba(245,212,66,0.8),transparent);bottom:-10px;left:50%;transform:translateX(-50%);border-radius:2px;opacity:0;transition:all 0.3s;}
+.pet-container.flying .flight-trail{height:40px;opacity:1;animation:trail-pulse 0.5s ease-in-out infinite alternate;}
+@keyframes trail-pulse{0%{height:30px;opacity:0.6;}100%{height:50px;opacity:1;}}
 .laser{position:absolute;width:4px;height:0;background:linear-gradient(to bottom,#ff0000,#ff4444,#ff0000);top:27px;opacity:0;z-index:100;border-radius:2px;box-shadow:0 0 10px #ff0000,0 0 20px #ff4444,0 0 40px #ff0000;}
 .left-laser{left:45px;}.right-laser{left:65px;}
-.pet-container.laser-active .laser{opacity:1;height:300px;animation:laser-beam 0.1s ease-in-out infinite alternate;}
+.pet-container.laser-active .laser{opacity:1;height:800px;animation:laser-beam 0.1s ease-in-out infinite alternate;}
 .pet-container.laser-active .eye{background:#ff0000!important;box-shadow:0 0 10px #ff0000,0 0 20px #ff4444;animation:eye-glow 0.15s ease-in-out infinite alternate;}
 .pet-container.laser-active .pupil{background:#fff!important;box-shadow:0 0 5px #fff;}
 @keyframes laser-beam{0%{width:3px;box-shadow:0 0 8px #ff0000,0 0 15px #ff4444;}100%{width:5px;box-shadow:0 0 15px #ff0000,0 0 30px #ff4444,0 0 50px #ff0000;}}
 @keyframes eye-glow{0%{box-shadow:0 0 8px #ff0000,0 0 15px #ff4444;}100%{box-shadow:0 0 15px #ff0000,0 0 30px #ff4444,0 0 50px #ff0000;}}
-
-/* 语录气泡 */
-.speech-bubble{position:absolute;max-width:200px;padding:10px 14px;background:rgba(255,255,255,0.95);border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:600;animation:bubble-in 0.3s ease-out;pointer-events:none;top:-60px;left:50%;transform:translateX(-50%);white-space:nowrap;}
-.speech-bubble::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid rgba(255,255,255,0.95);}
-.speech-bubble p{color:#333;font-size:12px;line-height:1.4;font-weight:bold;text-align:center;white-space:normal;}
+.laser-explosion{position:fixed;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,#fff,#ff4444,transparent);pointer-events:none;z-index:1001;animation:explode 0.5s ease-out forwards;}
+@keyframes explode{0%{transform:scale(0);opacity:1;}100%{transform:scale(3);opacity:0;}}
+.speech-bubble{position:fixed;max-width:250px;padding:12px 16px;background:rgba(255,255,255,0.95);border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:600;animation:bubble-in 0.3s ease-out;pointer-events:none;}
+.speech-bubble::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid rgba(255,255,255,0.95);}
+.speech-bubble p{color:#333;font-size:14px;line-height:1.5;font-weight:bold;text-align:center;}
 .speech-bubble.hidden{display:none;}
-@keyframes bubble-in{0%{transform:translateX(-50%) scale(0);opacity:0;}100%{transform:translateX(-50%) scale(1);opacity:1;}}
-
-/* 悬浮动画 */
+@keyframes bubble-in{0%{transform:scale(0) translateY(10px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
 .pet-container.idle{animation:float-idle 3s ease-in-out infinite;}
-@keyframes float-idle{0%,100%{transform:translate(-50%,-50%) translateY(0);}50%{transform:translate(-50%,-50%) translateY(-8px);}}
-
-/* 任务提示 */
-.task-tooltip{position:absolute;max-width:220px;min-width:160px;padding:10px 14px;background:rgba(20,20,40,0.95);border:1px solid rgba(245,212,66,0.4);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.5);z-index:700;pointer-events:none;opacity:0;transform:translateX(-50%) translateY(5px);transition:opacity 0.3s ease,transform 0.3s ease;top:-120px;left:50%;}
-.task-tooltip.visible{opacity:1;transform:translateX(-50%) translateY(0);}
+@keyframes float-idle{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.pet-container.landing{animation:land 0.5s ease-out;}
+@keyframes land{0%{transform:scale(1.1);}50%{transform:scale(0.95);}100%{transform:scale(1);}}
+body.shake{animation:screen-shake 0.3s ease-in-out;}
+@keyframes screen-shake{0%,100%{transform:translate(0);}20%{transform:translate(-3px,2px);}40%{transform:translate(3px,-2px);}60%{transform:translate(-2px,3px);}80%{transform:translate(2px,-3px);}}
+.speed-line{position:fixed;width:2px;height:20px;background:linear-gradient(to bottom,rgba(255,215,0,0.8),transparent);pointer-events:none;z-index:50;animation:speed-fade 0.5s ease-out forwards;}
+@keyframes speed-fade{0%{opacity:1;transform:scaleY(1);}100%{opacity:0;transform:scaleY(2);}}
+.task-tooltip{position:fixed;max-width:280px;min-width:180px;padding:14px 18px;background:rgba(20,20,40,0.95);border:1px solid rgba(245,212,66,0.4);border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5),0 0 15px rgba(245,212,66,0.15);z-index:700;pointer-events:none;opacity:0;transform:translateY(5px);transition:opacity 0.3s ease,transform 0.3s ease;backdrop-filter:blur(8px);}
+.task-tooltip.visible{opacity:1;transform:translateY(0);}
 .task-tooltip::before{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid rgba(20,20,40,0.95);}
-.task-tooltip-header{display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(245,212,66,0.2);}
-.status-icon{width:8px;height:8px;border-radius:50%;background:#ff9800;box-shadow:0 0 6px rgba(255,152,0,0.6);animation:status-pulse 2s ease-in-out infinite;}
+.task-tooltip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(245,212,66,0.2);}
+.status-icon{width:10px;height:10px;border-radius:50%;background:#4caf50;box-shadow:0 0 6px rgba(76,175,80,0.6);animation:status-pulse 2s ease-in-out infinite;}
+.status-icon.busy{background:#ff9800;box-shadow:0 0 6px rgba(255,152,0,0.6);}
 @keyframes status-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(0.8);}}
-.task-tooltip-header .title{color:#f5d442;font-size:11px;font-weight:bold;}
-.task-item{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+.task-tooltip-header .title{color:#f5d442;font-size:12px;font-weight:bold;}
+.task-content{color:#e0e0e0;font-size:13px;line-height:1.6;}
+.task-item{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;}
 .task-item:last-child{margin-bottom:0;}
-.task-icon{font-size:10px;}
-.task-text{font-size:11px;color:#ccc;}
+.task-icon{flex-shrink:0;font-size:11px;margin-top:2px;}
+.task-text{font-size:12px;color:#ccc;}
 .task-text.active{color:#fff;font-weight:bold;}
-.task-time{margin-top:6px;padding-top:4px;border-top:1px solid rgba(255,255,255,0.1);color:#888;font-size:10px;text-align:right;}
-
-/* 护盾效果 I键 */
-.shield{position:absolute;width:130px;height:170px;top:-5px;left:50%;transform:translateX(-50%);border-radius:50%;border:3px solid #f5d442;box-shadow:0 0 15px rgba(245,212,66,0.6),inset 0 0 15px rgba(245,212,66,0.2);opacity:0;pointer-events:none;z-index:200;}
-.shield.active{opacity:1;animation:shield-flash 0.3s ease-in-out 3 alternate;}
-@keyframes shield-flash{0%{opacity:0.4;box-shadow:0 0 10px rgba(245,212,66,0.3);}100%{opacity:1;box-shadow:0 0 25px rgba(245,212,66,0.8),inset 0 0 20px rgba(245,212,66,0.3);}}
-
-/* 声波效果 H键 */
-.soundwave{position:absolute;width:140px;height:30px;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:2px;opacity:0;pointer-events:none;z-index:200;}
-.soundwave.active{opacity:1;}
-.soundwave .bar{width:3px;background:#4fc3f7;border-radius:2px;animation:wave 0.5s ease-in-out infinite alternate;}
-.soundwave .bar:nth-child(1){height:8px;animation-delay:0s;}
-.soundwave .bar:nth-child(2){height:16px;animation-delay:0.1s;}
-.soundwave .bar:nth-child(3){height:24px;animation-delay:0.2s;}
-.soundwave .bar:nth-child(4){height:18px;animation-delay:0.3s;}
-.soundwave .bar:nth-child(5){height:12px;animation-delay:0.15s;}
-.soundwave .bar:nth-child(6){height:20px;animation-delay:0.25s;}
-.soundwave .bar:nth-child(7){height:10px;animation-delay:0.35s;}
-@keyframes wave{0%{transform:scaleY(0.5);}100%{transform:scaleY(1.5);}}
+.task-time{margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);color:#888;font-size:11px;text-align:right;}
 </style>
 </head>
 <body>
-<div id="pet" class="pet-container idle">
+<div class="taskbar">
+    <span class="start-btn">🖥️ 祖国人桌宠</span>
+    <span class="clock" id="clock"></span>
+</div>
+<div id="pet" class="pet-container">
     <div class="cape"></div><div class="cape-inner"></div>
     <div class="head"><div class="hair"></div>
         <div class="face">
@@ -115,7 +105,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
             <div class="mouth"></div>
         </div>
     </div>
-    <div class="torso"><div class="emblem"><div class="eagle">&#9733;</div></div><div class="belt"></div></div>
+    <div class="torso"><div class="emblem"><div class="eagle">★</div></div><div class="belt"></div></div>
     <div class="arm left-arm"></div><div class="arm right-arm"></div>
     <div class="leg left-leg"></div><div class="leg right-leg"></div>
     <div class="boot left-boot"></div><div class="boot right-boot"></div>
@@ -124,278 +114,184 @@ html,body{width:100%;height:100%;overflow:hidden;background:transparent;}
         <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div>
         <div class="particle p4"></div><div class="particle p5"></div><div class="particle p6"></div>
     </div>
-    <!-- 语录气泡 -->
-    <div id="speech-bubble" class="speech-bubble hidden"><p id="quote-text"></p></div>
-    <!-- 护盾 -->
-    <div id="shield" class="shield"></div>
-    <!-- 声波 -->
-    <div id="soundwave" class="soundwave">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-    <!-- 任务提示 -->
-    <div id="task-tooltip" class="task-tooltip">
-        <div class="task-tooltip-header"><div class="status-icon"></div><span class="title">&#9889; 任务面板</span></div>
-        <div id="task-content"></div>
-        <div class="task-time" id="task-time"></div>
-    </div>
+    <div class="flight-trail"></div>
 </div>
-
+<div id="speech-bubble" class="speech-bubble hidden"><p id="quote-text"></p></div>
+<div id="task-tooltip" class="task-tooltip">
+    <div class="task-tooltip-header"><div class="status-icon busy"></div><span class="title">⚡ 祖国人任务面板</span></div>
+    <div class="task-content" id="task-content"></div>
+    <div class="task-time" id="task-time"></div>
+</div>
 <script>
-const { ipcRenderer } = require('electron');
-const pet = document.getElementById('pet');
-const bubble = document.getElementById('speech-bubble');
-const quoteEl = document.getElementById('quote-text');
-const tooltip = document.getElementById('task-tooltip');
-const taskContent = document.getElementById('task-content');
-const taskTime = document.getElementById('task-time');
+(function(){
+var pet=document.getElementById('pet');
+var bubble=document.getElementById('speech-bubble');
+var quoteEl=document.getElementById('quote-text');
+var tooltip=document.getElementById('task-tooltip');
+var taskContent=document.getElementById('task-content');
+var taskTime=document.getElementById('task-time');
 
-const quotes = [
-    "我是这个国家最伟大的英雄！",
-    "我可以做任何我想做的事。",
-    "他们需要我，他们崇拜我。",
-    "没有人能阻止我。",
-    "我是祖国人，我无所不能！",
-    "牛奶... 我想喝牛奶。🥛",
-    "我不需要团队，我就是团队。",
-    "我是上帝。",
-    "鼓掌！我说鼓掌！👏",
-    "I can do whatever I want.",
-    "我会飞，而你不会。🛫",
-    "别让我不开心...",
-    "你们都欠我的！"
+var quotes=["我是这个国家最伟大的英雄！","我可以做任何我想做的事。","他们需要我，他们崇拜我。","我才是真正的英雄。","没有人能阻止我。","我为人民而战！...大概吧。","你知道我能从太空看到你吗？","我是祖国人，我无所不能！","牛奶... 我想喝牛奶。🥛","我可以用眼睛烧穿任何东西。","我不需要团队，我就是团队。","你在看我吗？","我是上帝。","鼓掌！我说鼓掌！👏","I can do whatever I want.","我会飞，而你不会。🛫","别让我不开心...","你们都欠我的！"];
+
+var taskSets=[
+[{icon:'🛡️',text:'巡视沃特国际总部',active:true},{icon:'📺',text:'准备电视采访',active:false},{icon:'🥛',text:'喝牛奶补充能量',active:false}],
+[{icon:'👁️',text:'用透视眼搜索目标',active:true},{icon:'🦸',text:'拍摄宣传照',active:false},{icon:'💀',text:'处理叛徒',active:false}],
+[{icon:'🌍',text:'拯救世界（表面上）',active:true},{icon:'📱',text:'查看社交媒体评论',active:false},{icon:'😤',text:'对星光发火',active:false}],
+[{icon:'✈️',text:'高空飞行巡逻',active:true},{icon:'🎬',text:'拍摄英雄纪录片',active:false},{icon:'🏢',text:'开沃特董事会',active:false}],
+[{icon:'🔥',text:'练习镭射眼精准度',active:true},{icon:'🥛',text:'喝牛奶补充能量',active:false},{icon:'👔',text:'检查战衣状态',active:false}],
+[{icon:'📡',text:'监听全城通讯',active:true},{icon:'💪',text:'维护公众英雄形象',active:false},{icon:'😈',text:'密谋下一步计划',active:false}]
 ];
 
-const taskSets = [
-    [{icon:'🛡️',text:'巡视沃特总部',active:true},{icon:'📺',text:'准备电视采访',active:false},{icon:'🥛',text:'喝牛奶',active:false}],
-    [{icon:'👁️',text:'透视眼搜索目标',active:true},{icon:'🦸',text:'拍宣传照',active:false},{icon:'💀',text:'处理叛徒',active:false}],
-    [{icon:'✈️',text:'高空飞行巡逻',active:true},{icon:'🎬',text:'拍纪录片',active:false},{icon:'🏢',text:'沃特董事会',active:false}],
-    [{icon:'🔥',text:'练习镭射眼',active:true},{icon:'🥛',text:'补充能量',active:false},{icon:'👔',text:'检查战衣',active:false}],
-    [{icon:'📡',text:'监听全城通讯',active:true},{icon:'💪',text:'维护形象',active:false},{icon:'😈',text:'密谋计划',active:false}]
-];
+var isDragging=false,isFlying=false,isLasering=false;
+var clickTimer=null,dragStartTime=0;
+var lastX=0,lastY=0,offsetX=0,offsetY=0,velocityX=0,velocityY=0,animId=null;
+var petX=window.innerWidth/2-60, petY=window.innerHeight/2-80;
+var hoverTimer=null;
 
-let isDragging = false, isLasering = false, clickTimer = null;
-let startMouseX, startMouseY, startWinX, startWinY;
-let hoverTimer = null;
+pet.style.left=petX+'px';
+pet.style.top=petY+'px';
+pet.classList.add('idle');
 
-// ======== 拖动 = 飞行 ========
-pet.addEventListener('mousedown', function(e) {
-    isDragging = true;
-    pet.classList.remove('idle');
-    pet.classList.add('flying');
+// 时钟
+function tick(){var n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+tick();setInterval(tick,1000);
+
+// 拖动
+pet.addEventListener('mousedown',startDrag);
+pet.addEventListener('touchstart',function(e){e.preventDefault();startDrag(e.touches[0]);},{passive:false});
+document.addEventListener('mousemove',onDrag);
+document.addEventListener('touchmove',function(e){e.preventDefault();onDrag(e.touches[0]);},{passive:false});
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchend',endDrag);
+
+function startDrag(e){
+    isDragging=true;dragStartTime=Date.now();
+    offsetX=(e.clientX||e.pageX)-petX;offsetY=(e.clientY||e.pageY)-petY;
+    lastX=e.clientX||e.pageX;lastY=e.clientY||e.pageY;
+    velocityX=0;velocityY=0;
+    pet.classList.remove('idle','landing');pet.classList.add('flying');isFlying=true;
     hideTooltip();
-
-    const pos = ipcRenderer.sendSync('get-position');
-    startWinX = pos.x;
-    startWinY = pos.y;
-    startMouseX = e.screenX;
-    startMouseY = e.screenY;
-});
-
-document.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
-    const dx = e.screenX - startMouseX;
-    const dy = e.screenY - startMouseY;
-    ipcRenderer.send('move-window', { x: startWinX + dx, y: startWinY + dy });
-});
-
-document.addEventListener('mouseup', function() {
-    if (!isDragging) return;
-    isDragging = false;
-    pet.classList.remove('flying');
-    pet.classList.add('idle');
-});
-
-// ======== 单击语录 + 双击镭射 ========
-pet.addEventListener('click', function() {
-    if (isDragging) return;
-    if (clickTimer) {
-        clearTimeout(clickTimer);
-        clickTimer = null;
-        fireLaser();
-        return;
+    if(animId)cancelAnimationFrame(animId);
+}
+function onDrag(e){
+    if(!isDragging)return;
+    var cx=e.clientX||e.pageX, cy=e.clientY||e.pageY;
+    velocityX=cx-lastX;velocityY=cy-lastY;
+    lastX=cx;lastY=cy;
+    petX=cx-offsetX;petY=cy-offsetY;
+    pet.style.left=petX+'px';pet.style.top=petY+'px';
+    var tilt=Math.max(-20,Math.min(20,velocityX*2));
+    pet.style.transform='rotate('+tilt+'deg)';
+    createSpeedLine(cx,cy,velocityX,velocityY);
+}
+function endDrag(){
+    if(!isDragging)return;isDragging=false;
+    var dur=Date.now()-dragStartTime;
+    if(dur<200&&Math.abs(velocityX)<3&&Math.abs(velocityY)<3){stopFlying();return;}
+    applyInertia();
+}
+function applyInertia(){
+    var vx=velocityX*2,vy=velocityY*2,f=0.95;
+    function step(){
+        vx*=f;vy*=f;petX+=vx;petY+=vy;
+        if(petX<0){petX=0;vx*=-0.5;}if(petX>window.innerWidth-120){petX=window.innerWidth-120;vx*=-0.5;}
+        if(petY<0){petY=0;vy*=-0.5;}if(petY>window.innerHeight-200){petY=window.innerHeight-200;vy*=-0.5;}
+        pet.style.left=petX+'px';pet.style.top=petY+'px';
+        pet.style.transform='rotate('+Math.max(-15,Math.min(15,vx*3))+'deg)';
+        if(Math.abs(vx)>0.5||Math.abs(vy)>0.5){animId=requestAnimationFrame(step);}else{stopFlying();}
     }
-    clickTimer = setTimeout(function() {
-        clickTimer = null;
-        showQuote();
-    }, 250);
+    animId=requestAnimationFrame(step);
+}
+function stopFlying(){
+    isFlying=false;pet.classList.remove('flying');pet.classList.add('landing');pet.style.transform='rotate(0deg)';
+    setTimeout(function(){pet.classList.remove('landing');pet.classList.add('idle');},500);
+}
+function createSpeedLine(x,y,vx,vy){
+    var sp=Math.sqrt(vx*vx+vy*vy);if(sp<5)return;
+    var l=document.createElement('div');l.className='speed-line';
+    l.style.left=(x+(Math.random()-0.5)*40)+'px';l.style.top=(y+(Math.random()-0.5)*40)+'px';
+    l.style.height=(sp*2)+'px';l.style.transform='rotate('+(Math.atan2(vy,vx)+Math.PI/2)+'rad)';
+    document.body.appendChild(l);setTimeout(function(){l.remove();},500);
+}
+
+// 点击语录 + 双击镭射
+pet.addEventListener('click',function(e){
+    if(isFlying)return;
+    if(clickTimer){clearTimeout(clickTimer);clickTimer=null;fireLaser();return;}
+    clickTimer=setTimeout(function(){clickTimer=null;showQuote();},250);
 });
 
-function showQuote() {
-    if (isLasering) return;
-    quoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+function showQuote(){
+    if(isLasering)return;
+    quoteEl.textContent=quotes[Math.floor(Math.random()*quotes.length)];
     bubble.classList.remove('hidden');
-    setTimeout(function() { bubble.classList.add('hidden'); }, 3000);
+    bubble.style.left=Math.max(10,Math.min(petX+60-125,window.innerWidth-260))+'px';
+    var ty=petY-70;if(ty<10)ty=petY+170;
+    bubble.style.top=ty+'px';
+    pet.style.transform='scale(1.1)';setTimeout(function(){pet.style.transform='scale(1)';},200);
+    setTimeout(function(){bubble.classList.add('hidden');},3000);
 }
 
-function fireLaser() {
-    if (isLasering) return;
-    isLasering = true;
-    bubble.classList.add('hidden');
-    pet.classList.remove('idle');
-    pet.classList.add('laser-active');
-    setTimeout(function() {
-        pet.classList.remove('laser-active');
-        pet.classList.add('idle');
-        isLasering = false;
-    }, 2000);
+function fireLaser(){
+    if(isLasering)return;isLasering=true;
+    bubble.classList.add('hidden');pet.classList.remove('idle');pet.classList.add('laser-active');
+    document.body.classList.add('shake');setTimeout(function(){document.body.classList.remove('shake');},300);
+    for(var i=0;i<5;i++){(function(i){setTimeout(function(){
+        var ex=document.createElement('div');ex.className='laser-explosion';
+        ex.style.left=(petX+40+(Math.random()-0.5)*100)+'px';
+        ex.style.top=(petY+200+Math.random()*300)+'px';
+        document.body.appendChild(ex);
+        document.body.classList.add('shake');setTimeout(function(){document.body.classList.remove('shake');},200);
+        setTimeout(function(){ex.remove();},600);
+    },i*300);})(i);}
+    setTimeout(function(){pet.classList.remove('laser-active');pet.classList.add('idle');isLasering=false;},2000);
 }
 
-// ======== 悬停任务提醒 ========
-pet.addEventListener('mouseenter', function() {
-    if (isDragging || isLasering) return;
-    hoverTimer = setTimeout(showTooltip, 400);
-});
-pet.addEventListener('mouseleave', hideTooltip);
-
-function showTooltip() {
-    const set = taskSets[Math.floor(Math.random() * taskSets.length)];
-    let html = '';
-    for (let i = 0; i < set.length; i++) {
-        html += '<div class="task-item"><span class="task-icon">' + (set[i].active ? set[i].icon : '○') + '</span><span class="task-text' + (set[i].active ? ' active' : '') + '">' + set[i].text + '</span></div>';
+// 眼睛跟随鼠标
+document.addEventListener('mousemove',function(e){
+    if(isLasering)return;
+    var pupils=document.querySelectorAll('.pupil');
+    for(var i=0;i<pupils.length;i++){
+        var eye=pupils[i].parentElement;var r=eye.getBoundingClientRect();
+        var cx=r.left+r.width/2,cy=r.top+r.height/2;
+        var ang=Math.atan2(e.clientY-cy,e.clientX-cx);
+        var dist=Math.min(2,Math.sqrt(Math.pow(e.clientX-cx,2)+Math.pow(e.clientY-cy,2))/50);
+        pupils[i].style.transform='translate(calc(-50% + '+Math.cos(ang)*dist+'px), calc(-50% + '+Math.sin(ang)*dist+'px))';
     }
-    taskContent.innerHTML = html;
-    const n = new Date();
-    taskTime.textContent = '🕐 ' + String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+});
+
+// 悬停任务提醒
+pet.addEventListener('mouseenter',function(){
+    if(isDragging||isLasering)return;
+    hoverTimer=setTimeout(showTooltip,400);
+});
+pet.addEventListener('mouseleave',hideTooltip);
+
+function showTooltip(){
+    var set=taskSets[Math.floor(Math.random()*taskSets.length)];
+    var html='';
+    for(var i=0;i<set.length;i++){
+        html+='<div class="task-item"><span class="task-icon">'+(set[i].active?set[i].icon:'○')+'</span><span class="task-text'+(set[i].active?' active':'')+'">'+set[i].text+'</span></div>';
+    }
+    taskContent.innerHTML=html;
+    var n=new Date();taskTime.textContent='🕐 '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+    tooltip.style.left=Math.max(10,Math.min(petX+60-140,window.innerWidth-290))+'px';
+    var ty=petY-140;if(ty<10)ty=petY+170;
+    tooltip.style.top=ty+'px';
     tooltip.classList.add('visible');
 }
+function hideTooltip(){if(hoverTimer){clearTimeout(hoverTimer);hoverTimer=null;}tooltip.classList.remove('visible');}
 
-function hideTooltip() {
-    if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
-    tooltip.classList.remove('visible');
-}
-
-// 欢迎
-setTimeout(showQuote, 1500);
-
-// ======== 键盘技能 ========
-document.addEventListener('keydown', function(e) {
-    const key = e.key.toLowerCase();
-    switch(key) {
-        case 't': skillHeatVision(); break;
-        case 'f': skillFly(); break;
-        case 'p': skillSuperStrength(); break;
-        case 'd': skillSuperSpeed(); break;
-        case 'x': skillXRay(); break;
-        case 'h': skillSuperHearing(); break;
-        case 'i': skillInvulnerability(); break;
-        case 'c': skillSocialInfluence(); break;
-    }
+// 窗口resize
+window.addEventListener('resize',function(){
+    if(petX>window.innerWidth-120)petX=window.innerWidth-120;
+    if(petY>window.innerHeight-200)petY=window.innerHeight-200;
+    pet.style.left=petX+'px';pet.style.top=petY+'px';
 });
 
-// T - 热视线（镭射眼 + 窗口抖动）
-function skillHeatVision() {
-    if (isLasering) return;
-    isLasering = true;
-    pet.classList.remove('idle');
-    pet.classList.add('laser-active');
-    // 窗口抖动
-    let shakeCount = 0;
-    const shakeInterval = setInterval(function() {
-        const pos = ipcRenderer.sendSync('get-position');
-        const ox = (Math.random() - 0.5) * 6;
-        const oy = (Math.random() - 0.5) * 6;
-        ipcRenderer.send('move-window', { x: pos.x + ox, y: pos.y + oy });
-        shakeCount++;
-        if (shakeCount > 10) clearInterval(shakeInterval);
-    }, 30);
-    setTimeout(function() {
-        pet.classList.remove('laser-active');
-        pet.classList.add('idle');
-        isLasering = false;
-    }, 1500);
-}
-
-// F - 飞行（窗口向上飘50px再落回）
-function skillFly() {
-    pet.classList.remove('idle');
-    pet.classList.add('flying');
-    const pos = ipcRenderer.sendSync('get-position');
-    const origY = pos.y;
-    let step = 0;
-    const upInterval = setInterval(function() {
-        step += 5;
-        ipcRenderer.send('move-window', { x: pos.x, y: origY - step });
-        if (step >= 50) {
-            clearInterval(upInterval);
-            setTimeout(function() {
-                let downStep = 50;
-                const downInterval = setInterval(function() {
-                    downStep -= 5;
-                    ipcRenderer.send('move-window', { x: pos.x, y: origY - downStep });
-                    if (downStep <= 0) {
-                        clearInterval(downInterval);
-                        pet.classList.remove('flying');
-                        pet.classList.add('idle');
-                    }
-                }, 30);
-            }, 300);
-        }
-    }, 30);
-}
-
-// P - 超级力量（窗口剧烈左右晃动）
-function skillSuperStrength() {
-    const pos = ipcRenderer.sendSync('get-position');
-    let count = 0;
-    const shakeInterval = setInterval(function() {
-        const offset = (count % 2 === 0) ? 10 : -10;
-        ipcRenderer.send('move-window', { x: pos.x + offset, y: pos.y });
-        count++;
-        if (count >= 8) {
-            clearInterval(shakeInterval);
-            ipcRenderer.send('move-window', { x: pos.x, y: pos.y });
-        }
-    }, 25);
-}
-
-// D - 超级速度（窗口闪现一段距离）
-function skillSuperSpeed() {
-    const pos = ipcRenderer.sendSync('get-position');
-    const screenSize = ipcRenderer.sendSync('get-screen-size');
-    const dx = (Math.random() - 0.5) * 200;
-    const dy = (Math.random() - 0.5) * 200;
-    let newX = Math.max(0, Math.min(pos.x + dx, screenSize.width - 200));
-    let newY = Math.max(0, Math.min(pos.y + dy, screenSize.height - 250));
-    ipcRenderer.send('move-window', { x: newX, y: newY });
-}
-
-// X - 透视眼（窗口半透明0.8秒）
-function skillXRay() {
-    ipcRenderer.send('set-opacity', 0.5);
-    setTimeout(function() {
-        ipcRenderer.send('set-opacity', 1.0);
-    }, 800);
-}
-
-// H - 超级听力（显示声波动画）
-function skillSuperHearing() {
-    const sw = document.getElementById('soundwave');
-    quoteEl.textContent = '正在监听心跳...';
-    bubble.classList.remove('hidden');
-    sw.classList.add('active');
-    setTimeout(function() {
-        sw.classList.remove('active');
-        bubble.classList.add('hidden');
-    }, 2000);
-}
-
-// I - 超强防御（金色护盾）
-function skillInvulnerability() {
-    const shield = document.getElementById('shield');
-    shield.classList.add('active');
-    setTimeout(function() {
-        shield.classList.remove('active');
-    }, 1500);
-}
-
-// C - 社会影响力（对话气泡）
-function skillSocialInfluence() {
-    const phrases = ["You are nothing.", "Bow to me.", "I'm the Homelander.", "鼓掌！现在就鼓掌！"];
-    quoteEl.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-    bubble.classList.remove('hidden');
-    setTimeout(function() { bubble.classList.add('hidden'); }, 3000);
-}
+// 欢迎
+setTimeout(showQuote,1000);
+})();
 </script>
 </body>
 </html>
